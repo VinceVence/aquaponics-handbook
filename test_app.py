@@ -7,6 +7,7 @@ import tensorflow as tf
 from PIL import Image
 from helper import pred_and_plot, load_and_prep_image
 import sys
+from details import fish_details
 
 # Weights
 fish_classifier = tf.keras.models.load_model(r"Weights/fish_classification.h5")
@@ -28,6 +29,7 @@ def load_image(image_file, image_size=(224, 224)):
 def main():
 
     st.title(f"Aquaponics Handbook 📘")
+    st.markdown("<hr>", True)
     menu = ['Home', 'Fish Classifier', 'Fish Recommendation (BETA)', 'Plant Disease Classifier', 'About']
     peripheral_active = False
     with st.sidebar:
@@ -168,7 +170,7 @@ def main():
 
         fish_classes = ['Black Sea Sprat',
                         'Gilt-Head Bream',
-                        'Hourse Mackerel',
+                        'Horse Mackerel',
                         'Red Mullet',
                         'Red Sea Bream',
                         'Sea Bass',
@@ -195,9 +197,20 @@ def main():
             third_index = (pred_prob == third).argmax()
             third_pred = fish_classes[third_index]
 
-            st.write(f"Class: {pred_class} | Confidence: {(pred_prob.max() * 100):.2f}%")
-            st.write(f"Class: {sec_pred} | Confidence: {(second.max() * 100):.2f}%")
-            st.write(f"Class: {third_pred} | Confidence: {(third.max() * 100):.2f}%")
+            st.markdown("<hr>", True)
+            st.subheader("Best Prediction")
+            st.success(f"Class: {pred_class} | Confidence: {(pred_prob.max() * 100):.2f}%")
+            st.write(fish_details(pred_class))
+
+            st.markdown("<hr>", True)
+            st.subheader("Second Prediction")
+            st.warning(f"Class: {sec_pred} | Confidence: {(second.max() * 100):.2f}%")
+            st.write(fish_details(sec_pred))
+
+            st.markdown("<hr>", True)
+            st.subheader("Third Prediction")
+            st.error(f"Class: {third_pred} | Confidence: {(third.max() * 100):.2f}%")
+            st.write(fish_details(third_pred))
 
     elif choice == "Fish Recommendation (BETA)" and peripheral_active is False:
         st.subheader("Fish Recommendation (BETA)🎣")
