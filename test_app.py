@@ -7,7 +7,7 @@ import tensorflow as tf
 from PIL import Image
 from helper import pred_and_plot, load_and_prep_image
 import sys
-from details import fish_details
+from details import fish_details, plant_details
 
 # Weights
 fish_classifier = tf.keras.models.load_model(r"Weights/fish_classification.h5")
@@ -24,6 +24,37 @@ def load_image(image_file, image_size=(224, 224)):
     img = Image.open(image_file)
     resizedImg = img.resize(image_size, Image.Resampling.LANCZOS)
     return resizedImg
+
+def make_predictions(classes, image_file, classifier, details):
+
+    content = Image.open(image_file)
+    content = tf.keras.preprocessing.image.img_to_array(content)  # pil to cv
+    content = load_and_prep_image(content)
+    pred_prob = classifier.predict(tf.expand_dims(content, axis=0))
+    pred_class = classes[pred_prob.argmax()]
+
+    second = sorted(list(pred_prob[0]))[-2]
+    sec_index = (pred_prob == second).argmax()
+    sec_pred = classes[sec_index]
+
+    third = sorted(list(pred_prob[0]))[-3]
+    third_index = (pred_prob == third).argmax()
+    third_pred = classes[third_index]
+
+    st.markdown("<hr>", True)
+    st.subheader("Best Prediction")
+    st.success(f"Class: {pred_class} | Confidence: {(pred_prob.max() * 100):.2f}%")
+    st.write(details(pred_class))
+
+    st.markdown("<hr>", True)
+    st.subheader("Second Prediction")
+    st.warning(f"Class: {sec_pred} | Confidence: {(second.max() * 100):.2f}%")
+    st.write(details(sec_pred))
+
+    st.markdown("<hr>", True)
+    st.subheader("Third Prediction")
+    st.error(f"Class: {third_pred} | Confidence: {(third.max() * 100):.2f}%")
+    st.write(details(third_pred))
 
 
 def main():
@@ -43,9 +74,9 @@ def main():
             conc = st.button("Conclusion")
             ref = st.button("References")
         with st.expander("Datasets"):
-            st.button("Fish Classification Dataset")
-            st.button("Fish Pond Dataset")
-            st.button("Plant Village Dataset")
+            fish_data = st.button("Fish Classification Dataset")
+            pond_data = st.button("Fish Pond Dataset")
+            plant_data = st.button("Plant Village Dataset")
 
         st.image(load_image('Website Images/aqua-logo.png', (200, 300)))
 
@@ -172,7 +203,27 @@ def main():
         [18]	D. H. T. Minh et al., “Deep Recurrent Neural Networks for mapping winter vegetation quality coverage via multi-temporal SAR Sentinel-1,” arXiv:1708.03694 [cs], Aug. 2017, Accessed: May 08, 2022. [Online]. Available: http://arxiv.org/abs/1708.03694
 
         """)
+    ################################################## DATASETS #############################################################
+    elif fish_data:
+        peripheral_active = True
+        st.subheader("Fish Classification Dataset")
+        st.write("The varying datasets were all gathered from Kaggle.com. The largescale fish dataset was adapted from the fish segmentation and classification study by Ulucan, et al. The dataset is composed of raw fish images separated through nine different classes namely: Black Sea Sprat, Gilt Head Beam, Horse Mackerel, Red Mullet, Red Sea Bream, Sea Bass, Shrimp, Striped Red Mullet, and Trout. Images were collected via 2 different cameras, Kodak Easyshare Z650 and Samsung ST60. Therefore, the resolution of the images are 2832 x 2128, 1024 x 768, respectively [12]. For each class, there are 1000 augmented images and their pair-wise augmented ground truths. However, this paper only considered the raw 1000 augmented images and completely disregarded the others.")
+        st.subheader("See Dataset on Kaggle for more information")
+        st.write("https://www.kaggle.com/datasets/crowww/a-large-scale-fish-dataset?datasetId=1165452&sortBy=voteCount")
 
+    elif pond_data:
+        peripheral_active = True
+        st.subheader("Fish Pond Dataset")
+        st.write("This is the real-time dataset. I designed an IoT framework for real-time aquatic environment monitoring using an Arduino and sensors. I used three sensors named pH, Temperature, and turbidity sensors for monitoring the water quality of 5 ponds. It has 4 columns and 591 rows. They are- pH, Temperature, Turbidity, and Fish. Here fish is the target variable and others are the independent variable. There are 11 fish categories, 86 pH distinct values, 46 temperature distinct values, and 85 Turbidity distinct values.")
+        st.subheader("See Dataset on Kaggle for more information")
+        st.write("https://www.kaggle.com/datasets/monirmukul/realtime-pond-water-dataset-for-fish-farming")
+
+    elif plant_data:
+        peripheral_active = True
+        st.subheader("Plant Disease Dataset")
+        st.write("The image dataset for plant disease classification was taken from a publicly known dataset called Plant Village from Pennsylvania State University that is available in many machine learning repositories. In this data-set, 38 different classes of plant leaf and background images are available. These classes include 13 different plant types some with many available images of different plant diseases. In this study, the proposed deep learning model utilized the augmented version of the dataset by Geetharamani and Arun Pandian in their paper “Identification of plant leaf diseases using a nine-layer deep convolutional neural network”. Overall, the data-set contained 54, 305 images.")
+        st.subheader("See Dataset on Kaggle for more information")
+        st.write("https://www.kaggle.com/datasets/arjuntejaswi/plant-village?datasetId=414960&sortBy=voteCount")
 
     ####################################################### MENU ##########################################################
 
@@ -209,7 +260,8 @@ def main():
 
     elif choice == "Fish Classifier" and peripheral_active is False:
         st.subheader("Fish Classifier 🐟")
-        image_file = st.file_uploader("Upload Images", type=["png", "jpg", "jpeg"])
+        image_file = st.empty()
+        image_file_fish = st.file_uploader("Upload Images", type=["png", "jpg", "jpeg"])
 
         fish_classes = ['Black Sea Sprat',
                         'Gilt-Head Bream',
@@ -221,39 +273,12 @@ def main():
                         'Striped Red Mullet',
                         'Trout']
 
-        if image_file is not None:
-            file_details = {"filename": image_file.name, "filetype":image_file.type, "filesize":image_file.size}
+        if image_file_fish is not None:
+            file_details = {"filename": image_file_fish.name, "filetype":image_file_fish.type, "filesize":image_file_fish.size}
             st.write(file_details)
-            st.image(load_image(image_file))
+            st.image(load_image(image_file_fish))
 
-            content = Image.open(image_file)
-            content = tf.keras.preprocessing.image.img_to_array(content)  # pil to cv
-            content = load_and_prep_image(content)
-            pred_prob = fish_classifier.predict(tf.expand_dims(content, axis=0))
-            pred_class = fish_classes[pred_prob.argmax()]
-
-            second = sorted(list(pred_prob[0]))[-2]
-            sec_index = (pred_prob == second).argmax()
-            sec_pred = fish_classes[sec_index]
-
-            third = sorted(list(pred_prob[0]))[-3]
-            third_index = (pred_prob == third).argmax()
-            third_pred = fish_classes[third_index]
-
-            st.markdown("<hr>", True)
-            st.subheader("Best Prediction")
-            st.success(f"Class: {pred_class} | Confidence: {(pred_prob.max() * 100):.2f}%")
-            st.write(fish_details(pred_class))
-
-            st.markdown("<hr>", True)
-            st.subheader("Second Prediction")
-            st.warning(f"Class: {sec_pred} | Confidence: {(second.max() * 100):.2f}%")
-            st.write(fish_details(sec_pred))
-
-            st.markdown("<hr>", True)
-            st.subheader("Third Prediction")
-            st.error(f"Class: {third_pred} | Confidence: {(third.max() * 100):.2f}%")
-            st.write(fish_details(third_pred))
+            make_predictions(fish_classes, image_file_fish, fish_classifier, fish_details)
 
     elif choice == "Fish Recommendation (BETA)" and peripheral_active is False:
         st.subheader("Fish Recommendation (BETA)🎣")
@@ -271,6 +296,7 @@ def main():
 
     elif choice == "Plant Disease Classifier" and peripheral_active is False:
         st.subheader("Plant Disease Classifier 🌱")
+        image_file = st.empty()
         image_file = st.file_uploader("Upload Images", type=["png", "jpg", "jpeg"])
 
         disease_classes = ['Apple___Apple_scab',
@@ -317,27 +343,31 @@ def main():
             st.write(file_details)
             st.image(load_image(image_file))
 
-            content = Image.open(image_file)
-            content = tf.keras.preprocessing.image.img_to_array(content)  # pil to cv
-            content = load_and_prep_image(content)
-            pred_prob = plant_disease_classifier.predict(tf.expand_dims(content, axis=0))
-            pred_class = disease_classes[pred_prob.argmax()]
+            make_predictions(disease_classes, image_file, plant_disease_classifier, plant_details)
 
-            second = sorted(list(pred_prob[0]))[-2]
-            sec_index = (pred_prob == second).argmax()
-            sec_pred = disease_classes[sec_index]
-
-            third = sorted(list(pred_prob[0]))[-3]
-            third_index = (pred_prob == third).argmax()
-            third_pred = disease_classes[third_index]
-
-            st.write(f"Class: {pred_class} | Confidence: {(pred_prob.max() * 100):.2f}%")
-            st.write(f"Class: {sec_pred} | Confidence: {(second.max() * 100):.2f}%")
-            st.write(f"Class: {third_pred} | Confidence: {(third.max() * 100):.2f}%")
+            # content = Image.open(image_file)
+            # content = tf.keras.preprocessing.image.img_to_array(content)  # pil to cv
+            # content = load_and_prep_image(content)
+            # pred_prob = plant_disease_classifier.predict(tf.expand_dims(content, axis=0))
+            # pred_class = disease_classes[pred_prob.argmax()]
+            #
+            # second = sorted(list(pred_prob[0]))[-2]
+            # sec_index = (pred_prob == second).argmax()
+            # sec_pred = disease_classes[sec_index]
+            #
+            # third = sorted(list(pred_prob[0]))[-3]
+            # third_index = (pred_prob == third).argmax()
+            # third_pred = disease_classes[third_index]
+            #
+            # st.write(f"Class: {pred_class} | Confidence: {(pred_prob.max() * 100):.2f}%")
+            # st.write(f"Class: {sec_pred} | Confidence: {(second.max() * 100):.2f}%")
+            # st.write(f"Class: {third_pred} | Confidence: {(third.max() * 100):.2f}%")
 
 
     elif choice == "About" and peripheral_active is False:
         st.subheader("About")
+
+
 
 
 if __name__ == "__main__":
