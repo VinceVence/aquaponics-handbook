@@ -345,25 +345,6 @@ def main():
 
             make_predictions(disease_classes, image_file, plant_disease_classifier, plant_details)
 
-            # content = Image.open(image_file)
-            # content = tf.keras.preprocessing.image.img_to_array(content)  # pil to cv
-            # content = load_and_prep_image(content)
-            # pred_prob = plant_disease_classifier.predict(tf.expand_dims(content, axis=0))
-            # pred_class = disease_classes[pred_prob.argmax()]
-            #
-            # second = sorted(list(pred_prob[0]))[-2]
-            # sec_index = (pred_prob == second).argmax()
-            # sec_pred = disease_classes[sec_index]
-            #
-            # third = sorted(list(pred_prob[0]))[-3]
-            # third_index = (pred_prob == third).argmax()
-            # third_pred = disease_classes[third_index]
-            #
-            # st.write(f"Class: {pred_class} | Confidence: {(pred_prob.max() * 100):.2f}%")
-            # st.write(f"Class: {sec_pred} | Confidence: {(second.max() * 100):.2f}%")
-            # st.write(f"Class: {third_pred} | Confidence: {(third.max() * 100):.2f}%")
-
-
     elif choice == "About" and peripheral_active is False:
         st.subheader("About")
 
