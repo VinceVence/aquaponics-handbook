@@ -3,3 +3,5 @@ Pillow
 streamlit
 tensorflow
 numpy
+pickleshare
+pickle
