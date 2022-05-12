@@ -115,21 +115,21 @@ def main():
 
         st.subheader("The dataset")
         st.write("The varying datasets were all gathered from Kaggle.com. The largescale fish dataset was adapted from the fish segmentation and classification study by Ulucan, et al. The dataset is composed of raw fish images separated through nine different classes namely: Black Sea Sprat, Gilt Head Beam, Horse Mackerel, Red Mullet, Red Sea Bream, Sea Bass, Shrimp, Striped Red Mullet, and Trout. Images were collected via 2 different cameras, Kodak Easyshare Z650 and Samsung ST60. Therefore, the resolution of the images are 2832 x 2128, 1024 x 768, respectively [12]. For each class, there are 1000 augmented images and their pair-wise augmented ground truths. However, this paper only considered the raw 1000 augmented images and completely disregarded the others. The sample images from randomly chosen classes are present in Figure 1.")
-        st.image(r"Paper Images\sample fish images.png")
+        st.image(r"Paper Images/sample fish images.png")
 
         st.write("The image dataset for plant disease classification was taken from a publicly known dataset called Plant Village from Pennsylvania State University that is available in many machine learning repositories. In this data-set, 38 different classes of plant leaf and background images are available. These classes include 13 different plant types some with many available images of different plant diseases. In this study, the proposed deep learning model utilized the augmented version of the dataset by Geetharamani and Arun Pandian in their paper “Identification of plant leaf diseases using a nine-layer deep convolutional neural network” [13]. Overall, the data-set contained 54, 305 images. The sample images from randomly chosen classes are presented in Figure 2. ")
-        st.image(r"Paper Images\sample plants images.png")
+        st.image(r"Paper Images/sample plants images.png")
 
         st.subheader("Experimental Setup")
         st.write("The Image classification features of the aquaponic handbook website utilized the pre-trained Deep Convolutional Neural Network(CNN) model called MobileNetV2 as base model for transfer-learning [14], [15]. This was implemented through the TensorFlow, Keras, and pandas libraries which use the Python programming language. The source code was written on Google Collaboratory which offers a free Graphics Processing Unit(GPU) that makes training and testing the models faster. The trained weights were then downloaded locally and integrated to a Streamlit backend which was used to create the website. The overall web application was then uploaded at GitHub and hosted at Streamlit sharing.")
 
         st.subheader("Image Classifcation")
         st.write("The schematic in Figure 3 depicts a potential view for the image classification and analysis of the available features in the aquaponics handbook website. Initially, plant leaf disease and market fish images are collected and classified into several categories. The image file paths were then arranged with its corresponding labels through a pandas Data frame to structure the data into two columns(file paths and labels) with the individual images as its rows. The data was then split into three categories namely: training, validation, and testing. Each category has a target size of 224 x 224, color mode is ‘rgb’, class mode is categorical, and the batch size is 32. The individual images were also preprocessed by scaling them to range from 0 to 1. Random flip, random rotation, random zoom, height adjustment, and width adjustment are some of the data augmentation techniques used. By using data augmentation methods, new sample photos are created from available photos to enhance and prepare the dataset [8]. In this case, only the images from the plant village dataset undergone data augmentation preprocessing. The photos are then used as input to the suggested approach for training the model in the following stage. After undergoing through transfer learning, the data from the base model is then connected to two Dense layers with 256 hidden fully connected(FC) layers and the activation function used was Rectified Linear Unit (ReLU). In the fish classification feature, only 128 fully connected layers are used within the two Dense layers.  Both the FC layers are separated by a Dropout function with a value of 0.2 respectively [16]. The dropout function was only applied to the images in the plant village dataset since there is a tendency for the model to overfit in the training data. The newly trained architectural model will be used to anticipate previously unseen images. In this case, the model was evaluated on the test data from the previous split. Eventually the findings of the classifications are achieved.")
-        st.image(r"Paper Images\Schematic Diagram.png")
+        st.image(r"Paper Images/Schematic Diagram.png")
 
         st.subheader("Transfer Learning")
         st.write("The Deep Learning model’s optimization and training is a computationally intensive and time-consuming operation. As mentioned earlier, a powerful graphics processing unit(GPU) is required for training the model, as well as large amounts of data. However, transfer learning, which is deployed in deep learning, solves these problems [8]. The pre-trained Convolutional Neural Network (CNN) used in transfer learning is optimized for one task and transfers knowledge to different modes [8], [17]. The images from the gathered datasets were compromised of different file sizes. Due to this, it was resized to a size of 224 x 224 with three channels to cater its ‘rgb’ type. The pre-trained CNN used is MobileNetV2 was used to find patterns within the input images and it’s corresponding final layers have to be connected to a dense layer. The final layers before the softmax is a 11 x 11 Dense layer for the Fish classification, and a 38 x 38 Dense for the plant disease classification. The basic picture preparation is necessary for the transfer learning considerations with the data augmented images. Figure 4 shows the whole ")
-        st.image(r"Paper Images\Neural network architecture.png")
+        st.image(r"Paper Images/Neural network architecture.png")
 
         st.subheader("Model Evaluation")
         st.write("The test dataset gathered from the splitting of the dataset during the data preparation stage was used to evaluate the trained model. Classification metrics from scikit-learn library were also used. This includes the classification reports and confusion matrix. Throughout the training of the model, the training accuracy, training loss, validation accuracy, and validation loss were also tracked to determine if the model is overfitting or underfitting.")
@@ -155,23 +155,23 @@ def main():
 
         st.subheader("Fish Classification Evaluation")
         st.write("The images from the fish classification was trained using the proposed Deep Convolutional Neural Network. The model scored a test accuracy of 99.78% and a test loss of 0.00722. The timeline for the accuracy and loss of the training and validation datasets are presented on Figure 5 and Figure 6 respectively. The corresponding classification reports are presented on Table 1 and the confusion matrix on Figure 7. Sample predictions on the test data are presented on Figure 8.")
-        st.image(r"Paper Images\Fish classification accuracy.png")
-        st.image(r"Paper Images\Fish Classification loss curves.png")
-        df_fish = pd.read_csv(r"Paper Tables\Fish classification reports.txt")
+        st.image(r"Paper Images/Fish classification accuracy.png")
+        st.image(r"Paper Images/Fish Classification loss curves.png")
+        df_fish = pd.read_csv(r"Paper Tables/Fish classification reports.txt")
         st.table(df_fish)
-        st.image(r"Paper Images\fish classification confusion matrix.png")
+        st.image(r"Paper Images/fish classification confusion matrix.png")
 
         st.subheader("Plant Disease Classification Evaluation")
         st.write("The images from the plant disease classification was trained using the proposed Deep Convolutional Neural Network. The model scored a test accuracy of 96.35% and a test loss of 0.11303. The timeline for the accuracy and loss of the training and validation datasets are presented on Figure 9 and Figure 10 respectively. The corresponding classification reports are presented on Table 2 and the confusion matrix on Figure 11. Sample predictions on the test data are presented on Figure 12.")
-        st.image(r"Paper Images\plant disease accuracy.png")
-        st.image(r"Paper Images\Plant disease loss curves.png")
-        df_plants = pd.read_csv(r"Paper Tables\plant disease classification reports.txt")
+        st.image(r"Paper Images/plant disease accuracy.png")
+        st.image(r"Paper Images/Plant disease loss curves.png")
+        df_plants = pd.read_csv(r"Paper Tables/plant disease classification reports.txt")
         st.table(df_plants)
-        st.image(r"Paper Images\plant disease confusion matrix.png")
+        st.image(r"Paper Images/plant disease confusion matrix.png")
 
         st.subheader("Website Deployment")
         st.write("The website was deployed through the Streamlit sharing feature associated with GitHub. Figure 13 shows the interface of the website.")
-        st.image(r"Paper Images\website interface.JPG")
+        st.image(r"Paper Images/website interface.JPG")
 
     elif conc:
         peripheral_active = True
@@ -230,9 +230,9 @@ def main():
     if choice == "Home" and peripheral_active is False:
         st.subheader("Home")
         st.write("In recent times, the use of artificial intelligence(AI) in aquaculture and hydroponics is rapidly becoming the norm as more data is being acquired and generated. The advancements in Internet of Things(IoT) and Machine Learning amplified the data gathering process and extended the development of new approaches in image classification and pattern recognition. However, the field of aquaponics, which encompasses both mentioned agricultural sciences, also have the same potential especially when portrayed through an economic or scientific perspective. The main objective that this research is trying to achieve is to provide a helper tool for non-practitioners of aquaponics through a data-driven web application that uses the concepts of deep learning as a subset of AI. Two image datasets were acquired composing of fish and plant diseases which will be used for image classification. Fish and plants play a core element in every aquaponic system, and it is important to have a tool that would ensure accurate decisions when handling both these components. The MobileNetV2 Deep Convolutional Neural Network was used as  a transfer learning base model for the image classification features of the website as it is fits in many platforms and lightweight for mobile devices. The performance measure parameters, i.e., precision, recall, F1-score, and test accuracy were also calculated and monitored. The designed model achieved a 99.78% test accuracy for the fish classification feature and a 96.35% test accuracy for the plant-disease classification feature. The proposed research directly supports the intersection of artificial intelligence and aquaponics as it is beneficial in terms of biodiversity and economics. ")
-        st.image(r"Website Images\Home image 1.png")
+        st.image(r"Website Images/Home image 1.png")
         st.write("Aquaponics is a food production system that couples aquaculture with the hydroponics whereby the nutrient-rich aquaculture water is fed to hydroponically-grown plants, where nitrifying bacteria convert ammonia into nitrates.")
-        st.image(r"Website Images\Home image 2.jpg")
+        st.image(r"Website Images/Home image 2.jpg")
 
         st.markdown("<hr>", True)
         st.subheader("What is Aquaponics?")
@@ -256,7 +256,7 @@ def main():
         - And the best part – You get to harvest both plants and fish from your garden.  Truly raise your entire meal in your backyard instead of using dirt or toxic chemical solutions to grow plants, aquaponics uses highly nutritious fish effluent that contains all the required nutrients for optimum plant growth. Instead of discharging water, aquaponics uses the plants, naturally occurring bacteria, and the media in which they grow in to clean and purify the water, after which it is returned to the fish tank. This water can be reused indefinitely and will only need to be topped-off when it is lost through transpiration from the plants and evaporation.
         """)
 
-        st.image(r"Website Images\Home image 3.png")
+        st.image(r"Website Images/Home image 3.png")
 
     elif choice == "Fish Classifier" and peripheral_active is False:
         st.subheader("Fish Classifier 🐟")
@@ -344,6 +344,7 @@ def main():
             st.image(load_image(image_file))
 
             make_predictions(disease_classes, image_file, plant_disease_classifier, plant_details)
+
 
     elif choice == "About" and peripheral_active is False:
         st.subheader("About")
