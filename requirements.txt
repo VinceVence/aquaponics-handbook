@@ -3,4 +3,4 @@ Pillow
 streamlit
 tensorflow
 numpy
-pickleshare
+scikit-learn
