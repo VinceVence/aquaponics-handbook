@@ -11,7 +11,7 @@ from details import fish_details, plant_details
 
 # Weights
 fish_classifier = tf.keras.models.load_model(r"Weights/fish_classification.h5")
-plant_disease_classifier = tf.keras.models.load_model(r"Weights/plant_disease_augmented_dataset.h5")
+plant_disease_classifier = tf.keras.models.load_model(r"Weights/plant_disease_full_dataset_color.h5")
 with open(r"Weights/fish_reco.sav", "rb") as input_file:
     fish_reco = pickle.load(input_file)
 
